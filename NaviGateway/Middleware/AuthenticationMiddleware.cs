@@ -1,9 +1,9 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
+using Io.Github.NaviCloud.Shared;
+using Io.Github.NaviCloud.Shared.Authentication;
 using Microsoft.AspNetCore.Http;
-using Naviauthentication;
-using NaviAuthenticationShared;
 using NaviGateway.Factory;
 
 namespace NaviGateway.Middleware

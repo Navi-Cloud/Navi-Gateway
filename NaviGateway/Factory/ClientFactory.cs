@@ -1,6 +1,6 @@
 using Grpc.Net.Client;
+using Io.Github.NaviCloud.Shared.Authentication;
 using Microsoft.Extensions.Configuration;
-using NaviAuthenticationShared;
 
 namespace NaviGateway.Factory
 {

@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Io.Github.NaviCloud.Shared;
+using Io.Github.NaviCloud.Shared.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Naviauthentication;
-using NaviAuthenticationShared;
 using NaviGateway.Attribute;
 using NaviGateway.Factory;
 using Newtonsoft.Json;
