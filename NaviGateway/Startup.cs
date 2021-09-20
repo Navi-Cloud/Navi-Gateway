@@ -49,6 +49,7 @@ namespace NaviGateway
 
             app.UseHttpsRedirection();
 
+            app.UseMiddleware<RequestLoggerMiddleware>();
             app.UseMiddleware<AuthenticationMiddleware>();
 
             app.UseRouting();
