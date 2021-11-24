@@ -1,10 +1,8 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
-using Io.Github.NaviCloud.Shared;
-using Io.Github.NaviCloud.Shared.Authentication;
 using Microsoft.AspNetCore.Http;
-using NaviGateway.Factory;
+using NaviGateway.Service;
 
 namespace NaviGateway.Middleware
 {
@@ -12,12 +10,12 @@ namespace NaviGateway.Middleware
     public class AuthenticationMiddleware
     {
         private readonly RequestDelegate _requestDelegate;
-        private readonly Authentication.AuthenticationClient _authenticationClient;
+        private readonly UserService _userService;
 
-        public AuthenticationMiddleware(RequestDelegate requestDelegate, ClientFactory clientFactory)
+        public AuthenticationMiddleware(RequestDelegate requestDelegate, UserService userService)
         {
             _requestDelegate = requestDelegate;
-            _authenticationClient = clientFactory.AuthenticationClient;
+            _userService = userService;
         }
 
         public async Task Invoke(HttpContext context)
@@ -27,11 +25,10 @@ namespace NaviGateway.Middleware
             if (userToken != null)
             {
                 // Authenticate from Authentication Service
-                var result = _authenticationClient.AuthenticateUser(new AuthenticationRequest
-                    { UserAccessToken = userToken });
-            
+                var authenticateResult = await _userService.AuthenticateUser(userToken);
+
                 // If result is success
-                if (result?.ResultType == ResultType.Success) context.Items["userEmail"] = result.Object;
+                if (authenticateResult != null) context.Items["userEmail"] = authenticateResult;
             }
             
             await _requestDelegate(context);

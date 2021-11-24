@@ -1,55 +1,33 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using Io.Github.NaviCloud.Shared;
-using Io.Github.NaviCloud.Shared.Authentication;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NaviGateway.Attribute;
-using NaviGateway.Factory;
-using Newtonsoft.Json;
+using NaviGateway.Model.Request;
+using NaviGateway.Service;
 
 namespace NaviGateway.Controllers
 {
     [ApiController]
     [Route("/api/v1/user")]
-    public class AuthenticationGateway: SuperController
+    public class AuthenticationController: ControllerBase
     {
-        private readonly Authentication.AuthenticationClient _client;
-
-        public AuthenticationGateway(ClientFactory clientFactory)
+        private readonly UserService _userService;
+        
+        public AuthenticationController(UserService userService)
         {
-            _client = clientFactory.AuthenticationClient;
+            _userService = userService;
         }
         
         [HttpPost("join")]
         public async Task<IActionResult> RegisterUser(RegisterRequest request)
         {
-            var result = await _client.RegisterUserAsync(request);
-            var handledCase = new Dictionary<ResultType, LazyExecution>
-            {
-                [ResultType.Duplicate] = () => Conflict(result.Message),
-                [ResultType.Success] = () => Ok()
-            };
-
-            return HandleCase(handledCase, result);
+            await _userService.RegisterUser(request);
+            return Ok();
         }
         
         [HttpPost("login")]
         public async Task<IActionResult> LoginUserAsync(LoginRequest loginRequest)
         {
-            var result = await _client.LoginUserAsync(loginRequest);
-
-            var handledCase = new Dictionary<ResultType, LazyExecution>
-            {
-                [ResultType.Forbidden] = () => new ObjectResult(result.Message) { StatusCode = StatusCodes.Status403Forbidden },
-                [ResultType.Success] = () =>
-                {
-                    var jsonObject = JsonConvert.DeserializeObject<Dictionary<string, string>>(result.Object);
-                    return Ok(jsonObject);
-                }
-            };
-
-            return HandleCase(handledCase, result);
+            return Ok(await _userService.LoginUser(loginRequest));
         }
         
         [HttpDelete]
@@ -60,14 +38,9 @@ namespace NaviGateway.Controllers
             {
                 UserEmail = HttpContext.Items["userEmail"] as string
             };
-            var result = await _client.RemoveUserAsync(request);
+            await _userService.RemoveUser(request);
 
-            var handledCase = new Dictionary<ResultType, LazyExecution>
-            {
-                [ResultType.Success] = () => Ok("Bye-Bye!")
-            };
-
-            return HandleCase(handledCase, result);
+            return Ok();
         }
     }
 }

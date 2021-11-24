@@ -1,19 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using LoggerLibrary;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using NaviGateway.Factory;
 using NaviGateway.Middleware;
+using NaviGateway.Repository;
+using NaviGateway.Service;
 
 namespace NaviGateway
 {
@@ -30,8 +24,13 @@ namespace NaviGateway
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddSingleton<ClientFactory>();
+            services.AddSingleton<MongoContext>();
+            services.AddSingleton<IUserRepository, UserRepository>();
+            
             services.AddSingleton<LoggerService>();
+            services.AddSingleton<IKafkaIntegration, KafkaIntegration>();
+            services.AddSingleton<IStorageIntegration, StorageIntegration>();
+            services.AddSingleton<UserService>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "NaviGateway", Version = "v1"});
