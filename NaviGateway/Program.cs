@@ -20,7 +20,6 @@ namespace NaviGateway
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.ConfigureKestrel(option => option.ListenAnyIP(5003));
                     webBuilder.UseStartup<Startup>();
                 });
     }
