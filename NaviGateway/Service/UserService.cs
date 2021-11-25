@@ -4,6 +4,7 @@ using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using MongoDB.Driver;
 using NaviGateway.Exceptions;
 using NaviGateway.Model;
@@ -51,7 +52,7 @@ namespace NaviGateway.Service
 
             if (userEntity?.CheckPassword(request.UserPassword) is false or null)
             {
-                throw new ApiServerException(HttpStatusCode.Forbidden, "Id or password is wrong!");
+                throw new ApiServerException(StatusCodes.Status403Forbidden, "Id or password is wrong!");
             }
 
             // If Matches - Create Access Token and register to user[update user db]
@@ -103,13 +104,13 @@ namespace NaviGateway.Service
                 // When Error Type is 'Duplicate Key'
                 if (mongoWriteException.WriteError.Category == ServerErrorCategory.DuplicateKey)
                 {
-                    throw new ApiServerException(HttpStatusCode.Conflict,
+                    throw new ApiServerException(StatusCodes.Status409Conflict,
                         $"User Email {toRegister.UserEmail} already exists!");
                 } // Else -> goto Unknown Error.
             }
 
             // Unknown if exception is not MongoWriteException.
-            throw new ApiServerException(HttpStatusCode.InternalServerError,
+            throw new ApiServerException(StatusCodes.Status500InternalServerError,
                 $"Unknown Error Occurred! : {superException.Message}", superException);
         }
     }

@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using NaviGateway.Attribute;
 using NaviGateway.Middleware;
 using NaviGateway.Repository;
 using NaviGateway.Service;
@@ -23,7 +24,7 @@ namespace NaviGateway
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers(option => option.Filters.Add<ExceptionFilter>());
             services.AddSingleton<MongoContext>();
             services.AddSingleton<IUserRepository, UserRepository>();
             

@@ -1,25 +1,26 @@
 using System.Net;
+using Microsoft.AspNetCore.Http;
 
 namespace NaviGateway.Exceptions
 {
     public class ApiServerException: System.Exception
     {
-        private readonly HttpStatusCode _httpStatusCode;
-        private readonly string _message;
+        public readonly int HttpStatusCode;
+        public readonly string Message;
 
-        private readonly System.Exception _exception;
+        public readonly System.Exception Exception;
 
-        public ApiServerException(HttpStatusCode statusCode, string message)
+        public ApiServerException(int statusCode, string message)
         {
-            _httpStatusCode = statusCode;
-            _message = message;
+            HttpStatusCode = statusCode;
+            Message = message;
         }
 
-        public ApiServerException(HttpStatusCode statusCode, string message, System.Exception exception)
+        public ApiServerException(int statusCode, string message, System.Exception exception)
         {
-            _httpStatusCode = statusCode;
-            _message = message;
-            _exception = exception;
+            HttpStatusCode = statusCode;
+            Message = message;
+            Exception = exception;
         }
     }
 }
