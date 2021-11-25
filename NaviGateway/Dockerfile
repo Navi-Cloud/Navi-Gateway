@@ -14,7 +14,7 @@ RUN dotnet publish "NaviGateway.csproj" -c Release -o /app/publish
 
 FROM base AS final
 
-ENV ASPNETCORE_URLS 4040
+ENV ASPNETCORE_URLS http://*:4040
 
 WORKDIR /app
 RUN find . -name "appsettings.json" -exec rm {} \;
