@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
-using LoggerLibrary;
+// using LoggerLibrary;
 using Microsoft.AspNetCore.Http;
+using NaviGateway.Service;
 
 namespace NaviGateway.Middleware
 {
